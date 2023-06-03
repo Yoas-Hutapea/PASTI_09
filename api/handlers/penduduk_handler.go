@@ -1,0 +1,77 @@
+package handlers
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+
+	"github.com/Yoas-Hutapea/Microservice_09/api/models"
+	"github.com/Yoas-Hutapea/Microservice_09/api/services"
+)
+
+type PendudukHandler struct {
+	PendudukService *services.PendudukService
+}
+
+func (ph *PendudukHandler) AddUser(w http.ResponseWriter, r *http.Request) {
+	// Parse the request body
+	var user models.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+
+	// Call the add user service
+	err = ph.PendudukService.AddUser(&user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Return success response
+	w.WriteHeader(http.StatusCreated)
+	fmt.Fprint(w, "User added successfully")
+}
+
+func (ph *PendudukHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	// Parse the request body
+	var user models.User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		return
+	}
+
+	// Call the update user service
+	err = ph.PendudukService.UpdateUser(&user)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Return success response
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprint(w, "User updated successfully")
+}
+
+func (ph *PendudukHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	// Parse the request parameters
+	// Assuming the user ID is passed as a query parameter named "id"
+	userID := r.URL.Query().Get("id")
+	if userID == "" {
+		http.Error(w, "User ID is required", http.StatusBadRequest)
+		return
+	}
+
+	// Call the delete user service
+	err := ph.PendudukService.DeleteUser(userID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Return success response
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprint(w, "User deleted successfully")
+}
