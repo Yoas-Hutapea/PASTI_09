@@ -3,27 +3,39 @@ package services
 import (
 	"errors"
 
-	"github.com/Yoas-Hutapea/Microservice_09/api/models"
 	"github.com/Yoas-Hutapea/Microservice_09/api/repositories"
+	"github.com/dgrijalva/jwt-go"
 )
 
 type AuthService struct {
 	UserRepository *repositories.UserRepository
 }
 
-func (as *AuthService) Login(nik, password string) error {
-	// Implement the logic for user login using nik and password
-	// Retrieve user by nik from the UserRepository
-	// Compare the password with the stored password
-	// Return an error if the login fails
+func NewAuthService(userRepository *repositories.UserRepository) *AuthService {
+	return &AuthService{
+		UserRepository: userRepository,
+	}
+}
+
+func (as *AuthService) Login(nik, password string) (string, error) {
 	user, err := as.UserRepository.GetUserByNIK(nik)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	if user.Password != password {
-		return errors.New("Invalid password")
+		return "", errors.New("Invalid password")
 	}
 
-	return nil
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"nik": user.NIK,
+		// Add more claims as needed
+	})
+
+	tokenString, err := token.SignedString([]byte("your-secret-key"))
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
 }

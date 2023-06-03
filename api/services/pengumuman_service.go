@@ -2,11 +2,17 @@ package services
 
 import (
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
-	"github.com/Yoas-Hutapea/Microservice_09/repositories"
+	"github.com/Yoas-Hutapea/Microservice_09/api/repositories"
 )
 
 type PengumumanService struct {
 	PengumumanRepository *repositories.PengumumanRepository
+}
+
+func NewPengumumanService(pengumumanRepository *repositories.PengumumanRepository) *PengumumanService {
+	return &PengumumanService{
+		PengumumanRepository: pengumumanRepository,
+	}
 }
 
 func (ps *PengumumanService) AddPengumuman(perangkat *models.Pengumuman) error {

@@ -2,11 +2,17 @@ package services
 
 import (
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
-	"github.com/Yoas-Hutapea/Microservice_09/repositories"
+	"github.com/Yoas-Hutapea/Microservice_09/api/repositories"
 )
 
 type PerangkatDesaService struct {
 	PerangkatDesaRepository *repositories.PerangkatDesaRepository
+}
+
+func NewPerangkatDesaService(perangkatRepository *repositories.PerangkatDesaRepository) *PerangkatDesaService {
+	return &PerangkatDesaService{
+		PerangkatDesaRepository: perangkatRepository,
+	}
 }
 
 func (ps *PerangkatDesaService) AddPerangkatDesa(perangkat *models.PerangkatDesa) error {

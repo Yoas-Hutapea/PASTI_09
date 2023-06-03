@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
 	"github.com/Yoas-Hutapea/Microservice_09/api/services"
@@ -11,6 +12,14 @@ import (
 
 type PerangkatHandler struct {
 	PerangkatService *services.PerangkatDesaService
+}
+
+func NewPerangkatHandler(perangkatService *services.PerangkatDesaService) *PerangkatHandler {
+	// Initialize and configure the PendudukHandler instance
+	return &PerangkatHandler{
+		PerangkatService: perangkatService,
+		// Initialize other fields or dependencies
+	}
 }
 
 func (ph *PerangkatHandler) AddPerangkat(w http.ResponseWriter, r *http.Request) {
@@ -64,8 +73,15 @@ func (ph *PerangkatHandler) DeletePerangkatDesa(w http.ResponseWriter, r *http.R
 		return
 	}
 
+	// Convert perangkatID to int
+	id, err := strconv.Atoi(perangkatID)
+	if err != nil {
+		http.Error(w, "Invalid Perangkat ID", http.StatusBadRequest)
+		return
+	}
+
 	// Call the delete perangkat service
-	err := ph.PerangkatService.DeletePerangkatDesa(perangkatID)
+	err = ph.PerangkatService.DeletePerangkatDesa(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

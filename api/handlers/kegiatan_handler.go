@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
 	"github.com/Yoas-Hutapea/Microservice_09/api/services"
@@ -11,6 +12,22 @@ import (
 
 type KegiatanHandler struct {
 	KegiatanService *services.KegiatanService
+}
+
+func NewKegiatanHandler(kegiatanService *services.KegiatanService) *KegiatanHandler {
+	// Initialize and configure the PendudukHandler instance
+	return &KegiatanHandler{
+		KegiatanService: kegiatanService,
+		// Initialize other fields or dependencies
+	}
+}
+
+func NewKegitanHandler(kegiatanService *services.KegiatanService) *KegiatanHandler {
+	// Initialize and configure the PendudukHandler instance
+	return &KegiatanHandler{
+		KegiatanService: kegiatanService,
+		// Initialize other fields or dependencies
+	}
 }
 
 func (kh *KegiatanHandler) AddKegiatan(w http.ResponseWriter, r *http.Request) {
@@ -64,8 +81,15 @@ func (kh *KegiatanHandler) DeleteKegiatan(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	// Convert kegiatanID to int
+	id, err := strconv.Atoi(kegiatanID)
+	if err != nil {
+		http.Error(w, "Invalid Kegiatan ID", http.StatusBadRequest)
+		return
+	}
+
 	// Call the delete kegiatan service
-	err := kh.KegiatanService.DeleteKegiatan(kegiatanID)
+	err = kh.KegiatanService.DeleteKegiatan(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

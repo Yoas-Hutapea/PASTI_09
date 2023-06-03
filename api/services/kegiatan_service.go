@@ -2,11 +2,17 @@ package services
 
 import (
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
-	"github.com/Yoas-Hutapea/Microservice_09/repositories"
+	"github.com/Yoas-Hutapea/Microservice_09/api/repositories"
 )
 
 type KegiatanService struct {
 	KegiatanRepository *repositories.KegiatanRepository
+}
+
+func NewKegiatanService(kegiatanRepository *repositories.KegiatanRepository) *KegiatanService {
+	return &KegiatanService{
+		KegiatanRepository: kegiatanRepository,
+	}
 }
 
 func (ks *KegiatanService) AddKegiatan(kegiatan *models.Kegiatan) error {

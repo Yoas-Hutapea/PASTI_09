@@ -2,14 +2,19 @@ package repositories
 
 import (
 	"database/sql"
-	"errors"
-	"fmt"
 
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
 )
 
 type UserRepository struct {
 	DB *sql.DB
+}
+
+func NewUserRepository() *UserRepository {
+	// initialize and configure the UserRepository instance
+	return &UserRepository{
+		// initialize fields and dependencies
+	}
 }
 
 func (ur *UserRepository) AddUser(user *models.User) error {

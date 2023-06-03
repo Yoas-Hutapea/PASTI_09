@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/go-playground/validator"
+	"github.com/go-playground/validator/v10"
 )
 
 type ValidationMiddleware struct {
@@ -12,39 +12,47 @@ type ValidationMiddleware struct {
 }
 
 func NewValidationMiddleware() *ValidationMiddleware {
+	// Initialize and configure the ValidationMiddleware instance
 	return &ValidationMiddleware{
-		validator: validator.New(),
+		// Initialize fields or dependencies
 	}
 }
 
-func (vm *ValidationMiddleware) ValidateInput(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Parse the request body into a map
-		var requestBody map[string]interface{}
-		err := json.NewDecoder(r.Body).Decode(&requestBody)
+func (vm *ValidationMiddleware) ValidateUserInput(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		err := r.ParseForm()
 		if err != nil {
-			http.Error(w, "Invalid request payload", http.StatusBadRequest)
+			http.Error(w, "Bad Request", http.StatusBadRequest)
 			return
 		}
 
-		// Validate the request body
-		err = vm.validator.Struct(requestBody)
+		// Use the validator to validate the request form values
+		err = vm.validator.Struct(r.Form)
 		if err != nil {
-			validationErrors := err.(validator.ValidationErrors)
-			var validationMessages []string
-			for _, fieldError := range validationErrors {
-				validationMessages = append(validationMessages, fieldError.Error())
+			// If there are validation errors, retrieve and handle them
+			if validationErrors, ok := err.(validator.ValidationErrors); ok {
+				// Map validation errors to a more readable format
+				errorMap := make(map[string]string)
+				for _, e := range validationErrors {
+					errorMap[e.Field()] = e.Tag()
+				}
+
+				// Convert the errorMap to JSON
+				jsonErrors, err := json.Marshal(errorMap)
+				if err != nil {
+					http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+					return
+				}
+
+				// Return the validation errors as a JSON response
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusBadRequest)
+				w.Write(jsonErrors)
+				return
 			}
-			response := map[string]interface{}{
-				"errors": validationMessages,
-			}
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusBadRequest)
-			json.NewEncoder(w).Encode(response)
-			return
 		}
 
-		// Proceed to the next handler if validation passes
-		next.ServeHTTP(w, r)
-	})
+		// Call the next handler if validation passes
+		next(w, r)
+	}
 }

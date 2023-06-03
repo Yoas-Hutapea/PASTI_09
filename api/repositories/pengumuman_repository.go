@@ -2,13 +2,19 @@ package repositories
 
 import (
 	"database/sql"
-	"errors"
 
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
 )
 
 type PengumumanRepository struct {
 	DB *sql.DB
+}
+
+func NewPengumumanRepository() *PengumumanRepository {
+	// initialize and configure the UserRepository instance
+	return &PengumumanRepository{
+		// initialize fields and dependencies
+	}
 }
 
 func (kr *PengumumanRepository) AddPengumuman(pengumuman *models.Pengumuman) error {

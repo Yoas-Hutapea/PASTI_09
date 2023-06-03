@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
 	"github.com/Yoas-Hutapea/Microservice_09/api/services"
@@ -11,6 +12,14 @@ import (
 
 type PendudukHandler struct {
 	PendudukService *services.PendudukService
+}
+
+func NewPendudukHandler(pendudukService *services.PendudukService) *PendudukHandler {
+	// Initialize and configure the PendudukHandler instance
+	return &PendudukHandler{
+		PendudukService: pendudukService,
+		// Initialize other fields or dependencies
+	}
 }
 
 func (ph *PendudukHandler) AddUser(w http.ResponseWriter, r *http.Request) {
@@ -64,8 +73,15 @@ func (ph *PendudukHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Convert userID to int
+	id, err := strconv.Atoi(userID)
+	if err != nil {
+		http.Error(w, "Invalid User ID", http.StatusBadRequest)
+		return
+	}
+
 	// Call the delete user service
-	err := ph.PendudukService.DeleteUser(userID)
+	err = ph.PendudukService.DeleteUser(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -75,3 +91,4 @@ func (ph *PendudukHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "User deleted successfully")
 }
+

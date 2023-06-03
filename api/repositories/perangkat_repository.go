@@ -2,13 +2,19 @@ package repositories
 
 import (
 	"database/sql"
-	"errors"
 
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
 )
 
 type PerangkatDesaRepository struct {
 	DB *sql.DB
+}
+
+func NewPerangkatDesaRepository() *PerangkatDesaRepository {
+	// initialize and configure the UserRepository instance
+	return &PerangkatDesaRepository{
+		// initialize fields and dependencies
+	}
 }
 
 func (pr *PerangkatDesaRepository) AddPerangkatDesa(perangkat *models.PerangkatDesa) error {

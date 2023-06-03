@@ -2,13 +2,19 @@ package repositories
 
 import (
 	"database/sql"
-	"errors"
 
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
 )
 
 type KegiatanRepository struct {
 	DB *sql.DB
+}
+
+func NewKegiatanRepository() *KegiatanRepository {
+	// initialize and configure the UserRepository instance
+	return &KegiatanRepository{
+		// initialize fields and dependencies
+	}
 }
 
 func (kr *KegiatanRepository) AddKegiatan(kegiatan *models.Kegiatan) error {

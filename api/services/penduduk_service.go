@@ -2,11 +2,17 @@ package services
 
 import (
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
-	"github.com/Yoas-Hutapea/Microservice_09/repositories"
+	"github.com/Yoas-Hutapea/Microservice_09/api/repositories"
 )
 
 type PendudukService struct {
 	UserRepository *repositories.UserRepository
+}
+
+func NewPendudukService(userRepository *repositories.UserRepository) *PendudukService {
+	return &PendudukService{
+		UserRepository: userRepository,
+	}
 }
 
 func (ps *PendudukService) AddUser(user *models.User) error {

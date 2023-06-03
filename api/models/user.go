@@ -1,5 +1,15 @@
 package models
 
+type LoginRequest struct {
+	NIK      string `json:"nik"`
+	Password string `json:"password"`
+}
+
+type LoginResponse struct {
+	Token string `json:"token"`
+	// Add other fields as needed
+}
+
 type User struct {
 	ID            int    `json:"id"`
 	Nama          string `json:"nama"`

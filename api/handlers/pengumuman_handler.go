@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
 	"github.com/Yoas-Hutapea/Microservice_09/api/services"
@@ -11,6 +12,14 @@ import (
 
 type PengumumanHandler struct {
 	PengumumanService *services.PengumumanService
+}
+
+func NewPengumumanHandler(pengumumanService *services.PengumumanService) *PengumumanHandler {
+	// Initialize and configure the PendudukHandler instance
+	return &PengumumanHandler{
+		PengumumanService: pengumumanService,
+		// Initialize other fields or dependencies
+	}
 }
 
 func (ph *PengumumanHandler) AddPengumuman(w http.ResponseWriter, r *http.Request) {
@@ -64,8 +73,15 @@ func (ph *PengumumanHandler) DeletePengumuman(w http.ResponseWriter, r *http.Req
 		return
 	}
 
+	// Convert pengumumanID to int
+	id, err := strconv.Atoi(pengumumanID)
+	if err != nil {
+		http.Error(w, "Invalid Pengumuman ID", http.StatusBadRequest)
+		return
+	}
+
 	// Call the delete pengumuman service
-	err := ph.PengumumanService.DeletePengumuman(pengumumanID)
+	err = ph.PengumumanService.DeletePengumuman(id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
@@ -11,6 +10,14 @@ import (
 
 type AuthHandler struct {
 	AuthService *services.AuthService
+}
+
+func NewAuthHandler(authService *services.AuthService) *AuthHandler {
+	// Initialize and configure the AuthHandler instance
+	return &AuthHandler{
+		AuthService: authService,
+		// Initialize other fields or dependencies
+	}
 }
 
 func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
