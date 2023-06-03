@@ -32,7 +32,7 @@ func (as *AuthService) Login(nik, password string) (string, error) {
 		// Add more claims as needed
 	})
 
-	tokenString, err := token.SignedString([]byte("your-secret-key"))
+	tokenString, err := token.SignedString([]byte("orhutapea123"))
 	if err != nil {
 		return "", err
 	}

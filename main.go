@@ -48,5 +48,6 @@ func main() {
 	router.HandleFunc("/pengumuman/{id}", validationMiddleware.ValidateUserInput(pengumumanHandler.UpdatePengumuman)).Methods("PUT")
 
 	// Start the HTTP server
+	log.Println("Server is running on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
