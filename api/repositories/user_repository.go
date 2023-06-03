@@ -10,10 +10,11 @@ type UserRepository struct {
 	DB *sql.DB
 }
 
-func NewUserRepository() *UserRepository {
+func NewUserRepository(dbUser *sql.DB) *UserRepository {
 	// initialize and configure the UserRepository instance
 	return &UserRepository{
 		// initialize fields and dependencies
+		DB: dbUser,
 	}
 }
 

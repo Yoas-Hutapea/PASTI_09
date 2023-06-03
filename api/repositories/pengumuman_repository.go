@@ -10,10 +10,11 @@ type PengumumanRepository struct {
 	DB *sql.DB
 }
 
-func NewPengumumanRepository() *PengumumanRepository {
+func NewPengumumanRepository(dbPengumuman *sql.DB) *PengumumanRepository {
 	// initialize and configure the UserRepository instance
 	return &PengumumanRepository{
 		// initialize fields and dependencies
+		DB: dbPengumuman,
 	}
 }
 

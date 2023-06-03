@@ -1,29 +1,58 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/Yoas-Hutapea/Microservice_09/api/handlers"
 	"github.com/Yoas-Hutapea/Microservice_09/api/middleware"
 	"github.com/Yoas-Hutapea/Microservice_09/api/repositories"
 	"github.com/Yoas-Hutapea/Microservice_09/api/services"
+	"github.com/gorilla/mux"
 )
 
 func main() {
 	// Create a new router
 	router := mux.NewRouter()
 
+	// Connect to the first MySQL database
+	dbUser, err := sql.Open("mysql", "root:@tcp(localhost:3306)/db_users")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dbUser.Close()
+
+	// Connect to the second MySQL database
+	dbPerangkat, err := sql.Open("mysql", "root:@tcp(localhost:3306)/db_perangkat")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dbPerangkat.Close()
+
+	// Connect to the third MySQL database
+	dbPengumuman, err := sql.Open("mysql", "root:@tcp(localhost:3306)/db_pengumuman")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dbPengumuman.Close()
+
+	// Connect to the fourth MySQL database
+	dbKegiatan, err := sql.Open("mysql", "root:@tcp(localhost:3306)/db_kegiatan")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer dbKegiatan.Close()
 	// Create an instance of the Repository
-	userRepository := repositories.NewUserRepository()
-	perangkatRepository :=  repositories.NewPerangkatDesaRepository()
-	pengumumanRepository := repositories.NewPengumumanRepository()
-	kegiatanRepository := repositories.NewKegiatanRepository()
+	UserRepository := repositories.NewUserRepository(dbUser)
+	perangkatRepository :=  repositories.NewPerangkatDesaRepository(dbPerangkat)
+	pengumumanRepository := repositories.NewPengumumanRepository(dbPengumuman)
+	kegiatanRepository := repositories.NewKegiatanRepository(dbKegiatan)
 
 	// Create instances of the services and middleware
-	authService := services.NewAuthService(userRepository)
-	pendudukService := services.NewPendudukService(userRepository)
+	authService := services.NewAuthService(UserRepository)
+	pendudukService := services.NewPendudukService(UserRepository)
 	kegiatanService := services.NewKegiatanService(kegiatanRepository)
 	perangkatService := services.NewPerangkatDesaService(perangkatRepository)
 	pengumumanService := services.NewPengumumanService(pengumumanRepository)

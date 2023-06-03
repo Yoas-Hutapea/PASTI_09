@@ -10,10 +10,11 @@ type PerangkatDesaRepository struct {
 	DB *sql.DB
 }
 
-func NewPerangkatDesaRepository() *PerangkatDesaRepository {
+func NewPerangkatDesaRepository(dbPerangkat *sql.DB) *PerangkatDesaRepository {
 	// initialize and configure the UserRepository instance
 	return &PerangkatDesaRepository{
 		// initialize fields and dependencies
+		DB : dbPerangkat,
 	}
 }
 

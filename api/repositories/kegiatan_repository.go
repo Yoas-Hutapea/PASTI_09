@@ -10,10 +10,11 @@ type KegiatanRepository struct {
 	DB *sql.DB
 }
 
-func NewKegiatanRepository() *KegiatanRepository {
+func NewKegiatanRepository(dbKegiatan *sql.DB) *KegiatanRepository {
 	// initialize and configure the UserRepository instance
 	return &KegiatanRepository{
 		// initialize fields and dependencies
+		DB : dbKegiatan,
 	}
 }
 

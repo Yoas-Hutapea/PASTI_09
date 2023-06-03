@@ -24,7 +24,7 @@ func (as *AuthService) Login(nik, password string) (string, error) {
 	}
 
 	if user.Password != password {
-		return "", errors.New("Invalid password")
+		return "", errors.New("invalid password")
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
