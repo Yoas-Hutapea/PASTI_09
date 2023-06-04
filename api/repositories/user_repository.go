@@ -34,13 +34,13 @@ func (ur *UserRepository) AddUser(user *models.User) error {
 }
 
 func (ur *UserRepository) UpdateUser(user *models.User) error {
-	stmt, err := ur.DB.Prepare("UPDATE users SET nama=?, no_telp=?, alamat=?, tempat_lahir=?, tanggal_lahir=?, usia=?, jenis_kelamin=?, pekerjaan=?, agama=?, kk=?, gambar=?, password=? WHERE nik=?")
+	stmt, err := ur.DB.Prepare("UPDATE users SET nama=?, no_telp=?, alamat=?, tempat_lahir=?, tanggal_lahir=?, usia=?, jenis_kelamin=?, pekerjaan=?, agama=?, kk=?, gambar=?, nik=? WHERE id=?")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(user.Nama, user.NoTelp, user.Alamat, user.TempatLahir, user.TanggalLahir, user.Usia, user.JenisKelamin, user.Pekerjaan, user.Agama, user.KK, user.Gambar, user.Password, user.NIK)
+	_, err = stmt.Exec(user.Nama, user.NoTelp, user.Alamat, user.TempatLahir, user.TanggalLahir, user.Usia, user.JenisKelamin, user.Pekerjaan, user.Agama, user.KK, user.Gambar, user.NIK)
 	if err != nil {
 		return err
 	}

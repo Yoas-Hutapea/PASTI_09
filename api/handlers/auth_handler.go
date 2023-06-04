@@ -6,6 +6,7 @@ import (
 
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
 	"github.com/Yoas-Hutapea/Microservice_09/api/services"
+	
 )
 
 type AuthHandler struct {
@@ -30,20 +31,39 @@ func (ah *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Call the login service
-	token, err := ah.AuthService.Login(loginRequest.NIK, loginRequest.Password)
+	token, user, err := ah.AuthService.Login(loginRequest.NIK, loginRequest.Password)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
 
-	// Return the token in the response
-	response := models.LoginResponse{Token: token}
-	jsonResponse, err := json.Marshal(response)
+	// Create the response object
+	loginResponse := models.LoginResponse{
+		Token: token,
+		User: models.UserDetail{
+			ID:           user.ID,
+			Nama:         user.Nama,
+			NIK:          user.NIK,
+			NoTelp:       user.NoTelp,
+			Alamat:       user.Alamat,
+			TempatLahir:  user.TempatLahir,
+			TanggalLahir: user.TanggalLahir,
+			Usia:         user.Usia,
+			JenisKelamin: user.JenisKelamin,
+			Pekerjaan:    user.Pekerjaan,
+			Agama:        user.Agama,
+			KK:           user.KK,
+			Gambar:       user.Gambar,
+		},
+	}
+
+	// Return the response
+	jsonResponse, err := json.Marshal(loginResponse)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 		return
 	}
-
+	
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(jsonResponse)

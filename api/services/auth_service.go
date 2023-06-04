@@ -2,8 +2,10 @@ package services
 
 import (
 	"errors"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/Yoas-Hutapea/Microservice_09/api/repositories"
+	"github.com/Yoas-Hutapea/Microservice_09/api/models"
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -17,25 +19,49 @@ func NewAuthService(userRepository *repositories.UserRepository) *AuthService {
 	}
 }
 
-func (as *AuthService) Login(nik, password string) (string, error) {
-	user, err := as.UserRepository.GetUserByNIK(nik)
-	if err != nil {
-		return "", err
-	}
+func (as *AuthService) Login(nik, password string) (string, models.UserDetail, error) {
+    // Check if the provided credentials are valid
+    user, err := as.UserRepository.GetUserByNIK(nik)
+    if err != nil {
+        return "", models.UserDetail{}, err
+    }
 
-	if user.Password != password {
-		return "", errors.New("invalid password")
-	}
+    // Compare the password with the hashed password stored in the user record
+    err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+    if err != nil {
+        return "", models.UserDetail{}, errors.New("invalid password")
+    }
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"nik": user.NIK,
-		// Add more claims as needed
-	})
+    // Generate a JWT token
+    token := jwt.New(jwt.SigningMethodHS256)
+    claims := token.Claims.(jwt.MapClaims)
+    claims["userID"] = user.ID
+    // Add other claims as needed
+    // e.g., claims["role"] = user.Role
 
-	tokenString, err := token.SignedString([]byte("orhutapea123"))
-	if err != nil {
-		return "", err
-	}
+    // Sign the token with a secret key
+    tokenString, err := token.SignedString([]byte("your-secret-key"))
+    if err != nil {
+        return "", models.UserDetail{}, err
+    }
 
-	return tokenString, nil
+    // Convert *models.User to models.UserDetail
+    userDetail := models.UserDetail{
+        ID:            user.ID,
+        Nama:          user.Nama,
+        NIK:           user.NIK,
+        NoTelp:        user.NoTelp,
+        Alamat:        user.Alamat,
+        TempatLahir:   user.TempatLahir,
+        TanggalLahir:  user.TanggalLahir,
+        Usia:          user.Usia,
+        JenisKelamin:  user.JenisKelamin,
+        Pekerjaan:     user.Pekerjaan,
+        Agama:         user.Agama,
+        KK:            user.KK,
+        Gambar:        user.Gambar,
+    }
+
+    return tokenString, userDetail, nil
 }
+

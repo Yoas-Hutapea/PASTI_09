@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"github.com/dgrijalva/jwt-go"
 
 	"github.com/Yoas-Hutapea/Microservice_09/api/models"
 	"github.com/Yoas-Hutapea/Microservice_09/api/services"
@@ -44,9 +45,26 @@ func (ph *PendudukHandler) AddUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ph *PendudukHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	// Get the JWT token from the request header
+	tokenString := r.Header.Get("Authorization")
+	if tokenString == "" {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	// Parse the JWT token
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// Provide the same signing key used in the authentication process
+		return []byte("your-secret-key"), nil
+	})
+	if err != nil || !token.Valid {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
 	// Parse the request body
 	var user models.User
-	err := json.NewDecoder(r.Body).Decode(&user)
+	err = json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
@@ -63,6 +81,7 @@ func (ph *PendudukHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "User updated successfully")
 }
+
 
 func (ph *PendudukHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	// Parse the request parameters

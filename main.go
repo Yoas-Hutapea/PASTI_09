@@ -68,7 +68,7 @@ func main() {
 	// Register the routes and apply the validation middleware where needed
 	router.HandleFunc("/login", validationMiddleware.ValidateUserInput(authHandler.Login)).Methods("POST")
 	router.HandleFunc("/penduduk", validationMiddleware.ValidateUserInput(pendudukHandler.AddUser)).Methods("POST")
-	router.HandleFunc("/penduduk/{nik}", validationMiddleware.ValidateUserInput(pendudukHandler.UpdateUser)).Methods("PUT")
+	router.HandleFunc("/penduduk/{id}", validationMiddleware.ValidateUserInput(pendudukHandler.UpdateUser)).Methods("PUT")
 	router.HandleFunc("/kegiatan", validationMiddleware.ValidateUserInput(kegiatanHandler.AddKegiatan)).Methods("POST")
 	router.HandleFunc("/kegiatan/{id}", validationMiddleware.ValidateUserInput(kegiatanHandler.UpdateKegiatan)).Methods("PUT")
 	router.HandleFunc("/perangkat", validationMiddleware.ValidateUserInput(perangkatHandler.AddPerangkat)).Methods("POST")
