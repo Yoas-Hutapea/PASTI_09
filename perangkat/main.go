@@ -37,6 +37,6 @@ func main() {
 	router.HandleFunc("/perangkat/{id}", perangkatHandler.UpdatePerangkatDesa).Methods("PUT")
 
 	// Start the HTTP server
-	log.Println("Perangkat service is running on http://localhost:8084")
-	log.Fatal(http.ListenAndServe(":8084", router))
+	log.Println("Perangkat service is running on http://localhost:8085")
+	log.Fatal(http.ListenAndServe(":8085", router))
 }

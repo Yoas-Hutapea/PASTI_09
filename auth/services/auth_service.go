@@ -65,3 +65,11 @@ func (as *AuthService) Login(nik, password string) (string, models.UserDetail, e
 
 	return tokenString, userDetail, nil
 }
+
+func (as *AuthService) GetUserByNIK(userNIK string) (*models.User, error) {
+	return as.UserRepository.GetUserByNIK(userNIK)
+}
+
+func (as *AuthService) GetAllUsers() ([]*models.User, error) {
+	return as.UserRepository.GetAllUsers()
+}

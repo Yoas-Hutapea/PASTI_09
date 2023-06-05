@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/Yoas-Hutapea/Microservice_09/penduduk/models"
 )
@@ -19,13 +20,18 @@ func NewUserRepository(dbUser *sql.DB) *UserRepository {
 }
 
 func (ur *UserRepository) AddUser(user *models.User) error {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+
 	stmt, err := ur.DB.Prepare("INSERT INTO users (nama, nik, no_telp, alamat, tempat_lahir, tanggal_lahir, usia, jenis_kelamin, pekerjaan, agama, kk, gambar, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(user.Nama, user.NIK, user.NoTelp, user.Alamat, user.TempatLahir, user.TanggalLahir, user.Usia, user.JenisKelamin, user.Pekerjaan, user.Agama, user.KK, user.Gambar, user.Password)
+	_, err = stmt.Exec(user.Nama, user.NIK, user.NoTelp, user.Alamat, user.TempatLahir, user.TanggalLahir, user.Usia, user.JenisKelamin, user.Pekerjaan, user.Agama, user.KK, user.Gambar, hashedPassword)
 	if err != nil {
 		return err
 	}
@@ -40,7 +46,7 @@ func (ur *UserRepository) UpdateUser(user *models.User) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(user.Nama, user.NoTelp, user.Alamat, user.TempatLahir, user.TanggalLahir, user.Usia, user.JenisKelamin, user.Pekerjaan, user.Agama, user.KK, user.Gambar, user.NIK)
+	_, err = stmt.Exec(user.Nama, user.NoTelp, user.Alamat, user.TempatLahir, user.TanggalLahir, user.Usia, user.JenisKelamin, user.Pekerjaan, user.Agama, user.KK, user.Gambar, user.NIK, user.ID)
 	if err != nil {
 		return err
 	}
@@ -61,48 +67,4 @@ func (ur *UserRepository) DeleteUser(userID int) error {
 	}
 
 	return nil
-}
-
-func (ur *UserRepository) GetUserByNIK(userNIK string) (*models.User, error) {
-	stmt, err := ur.DB.Prepare("SELECT id, nama, nik, no_telp, alamat, tempat_lahir, tanggal_lahir, usia, jenis_kelamin, pekerjaan, agama, kk, gambar, password FROM users WHERE nik=?")
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-
-	row := stmt.QueryRow(userNIK)
-
-	user := &models.User{}
-	err = row.Scan(&user.ID, &user.Nama, &user.NIK, &user.NoTelp, &user.Alamat, &user.TempatLahir, &user.TanggalLahir, &user.Usia, &user.JenisKelamin, &user.Pekerjaan, &user.Agama, &user.KK, &user.Gambar, &user.Password)
-	if err != nil {
-		return nil, err
-	}
-
-	return user, nil
-}
-
-func (ur *UserRepository) GetAllUsers() ([]*models.User, error) {
-	stmt, err := ur.DB.Prepare("SELECT id, nama, nik, no_telp, alamat, tempat_lahir, tanggal_lahir, usia, jenis_kelamin, pekerjaan, agama, kk, gambar, password FROM users")
-	if err != nil {
-		return nil, err
-	}
-	defer stmt.Close()
-
-	rows, err := stmt.Query()
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	users := []*models.User{}
-	for rows.Next() {
-		user := &models.User{}
-		err := rows.Scan(&user.ID, &user.Nama, &user.NIK, &user.NoTelp, &user.Alamat, &user.TempatLahir, &user.TanggalLahir, &user.Usia, &user.JenisKelamin, &user.Pekerjaan, &user.Agama, &user.KK, &user.Gambar, &user.Password)
-		if err != nil {
-			return nil, err
-		}
-		users = append(users, user)
-	}
-
-	return users, nil
 }

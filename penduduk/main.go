@@ -35,6 +35,7 @@ func main() {
 	// Register the routes
 	router.HandleFunc("/penduduk", pendudukHandler.AddUser).Methods("POST")
 	router.HandleFunc("/penduduk/{id}", pendudukHandler.UpdateUser).Methods("PUT")
+	router.HandleFunc("/penduduk/{id}", pendudukHandler.DeleteUser).Methods("DELETE")
 
 	// Start the HTTP server
 	log.Println("Penduduk service is running on http://localhost:8082")

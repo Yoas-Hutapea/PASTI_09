@@ -18,8 +18,8 @@ func NewPengumumanRepository(dbPengumuman *sql.DB) *PengumumanRepository {
 	}
 }
 
-func (kr *PengumumanRepository) AddPengumuman(pengumuman *models.Pengumuman) error {
-	stmt, err := kr.DB.Prepare("INSERT INTO pengumuman (tanggal, judul, deskripsi) VALUES (?, ?, ?,)")
+func (pg *PengumumanRepository) AddPengumuman(pengumuman *models.Pengumuman) error {
+	stmt, err := pg.DB.Prepare("INSERT INTO pengumuman (tanggal, judul, deskripsi) VALUES (?, ?, ?)")
 	if err != nil {
 		return err
 	}
@@ -33,8 +33,8 @@ func (kr *PengumumanRepository) AddPengumuman(pengumuman *models.Pengumuman) err
 	return nil
 }
 
-func (kr *PengumumanRepository) UpdatePengumuman(pengumuman *models.Pengumuman) error {
-	stmt, err := kr.DB.Prepare("UPDATE pengumuman SET tanggal=?, judul=?, deskripsi=? WHERE id=?",)
+func (pg *PengumumanRepository) UpdatePengumuman(pengumuman *models.Pengumuman) error {
+	stmt, err := pg.DB.Prepare("UPDATE pengumuman SET tanggal=?, judul=?, deskripsi=? WHERE id=?",)
 	if err != nil {
 		return err
 	}
@@ -48,8 +48,8 @@ func (kr *PengumumanRepository) UpdatePengumuman(pengumuman *models.Pengumuman) 
 	return nil
 }
 
-func (kr *PengumumanRepository) DeletePengumuman(pengumumanID int) error {
-	stmt, err := kr.DB.Prepare("DELETE FROM pengumuman WHERE id=?")
+func (pg *PengumumanRepository) DeletePengumuman(pengumumanID int) error {
+	stmt, err := pg.DB.Prepare("DELETE FROM pengumuman WHERE id=?")
 	if err != nil {
 		return err
 	}
@@ -63,8 +63,8 @@ func (kr *PengumumanRepository) DeletePengumuman(pengumumanID int) error {
 	return nil
 }
 
-func (kr *PengumumanRepository) GetPengumumanByID(pengumumanID int) (*models.Pengumuman, error) {
-	stmt, err := kr.DB.Prepare("SELECT id, tanggal, judul, deskripsi FROM pengumuman WHERE id=?")
+func (pg *PengumumanRepository) GetPengumumanByID(pengumumanID int) (*models.Pengumuman, error) {
+	stmt, err := pg.DB.Prepare("SELECT id, tanggal, judul, deskripsi FROM pengumuman WHERE id=?")
 	if err != nil {
 		return nil, err
 	}
@@ -81,8 +81,8 @@ func (kr *PengumumanRepository) GetPengumumanByID(pengumumanID int) (*models.Pen
 	return pengumuman, nil
 }
 
-func (kr *PengumumanRepository) GetAllPengumuman() ([]*models.Pengumuman, error) {
-	stmt, err := kr.DB.Prepare("SELECT id, tanggal, judul, deskripsi FROM pengumuman")
+func (pg *PengumumanRepository) GetAllPengumuman() ([]*models.Pengumuman, error) {
+	stmt, err := pg.DB.Prepare("SELECT id, tanggal, judul, deskripsi FROM pengumuman")
 	if err != nil {
 		return nil, err
 	}

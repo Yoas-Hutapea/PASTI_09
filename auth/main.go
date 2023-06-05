@@ -34,6 +34,8 @@ func main() {
 
 	// Register the routes
 	router.HandleFunc("/login", authHandler.Login).Methods("POST")
+	router.HandleFunc("/penduduk/{nik}", authHandler.GetUserByNIK).Methods("GET")
+	router.HandleFunc("/penduduk", authHandler.GetAllUsers).Methods("GET")
 
 	// Start the HTTP server
 	log.Println("Auth service is running on http://localhost:8081")

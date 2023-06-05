@@ -22,14 +22,6 @@ func NewKegiatanHandler(kegiatanService *services.KegiatanService) *KegiatanHand
 	}
 }
 
-func NewKegitanHandler(kegiatanService *services.KegiatanService) *KegiatanHandler {
-	// Initialize and configure the PendudukHandler instance
-	return &KegiatanHandler{
-		KegiatanService: kegiatanService,
-		// Initialize other fields or dependencies
-	}
-}
-
 func (kh *KegiatanHandler) AddKegiatan(w http.ResponseWriter, r *http.Request) {
 	// Parse the request body
 	var kegiatan models.Kegiatan

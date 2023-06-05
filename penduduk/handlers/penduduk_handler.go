@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"github.com/gorilla/mux"
 
 	"github.com/Yoas-Hutapea/Microservice_09/penduduk/models"
 	"github.com/Yoas-Hutapea/Microservice_09/penduduk/services"
+
 )
 
 type PendudukHandler struct {
@@ -66,8 +68,9 @@ func (ph *PendudukHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 func (ph *PendudukHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	// Parse the request parameters
-	// Assuming the user ID is passed as a query parameter named "id"
-	userID := r.URL.Query().Get("id")
+	// Assuming the user ID is passed as a path variable named "id"
+	vars := mux.Vars(r)
+	userID := vars["id"]
 	if userID == "" {
 		http.Error(w, "User ID is required", http.StatusBadRequest)
 		return
