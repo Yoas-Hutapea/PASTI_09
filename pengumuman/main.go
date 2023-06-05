@@ -35,6 +35,9 @@ func main() {
 	// Register the routes
 	router.HandleFunc("/pengumuman", pengumumanHandler.AddPengumuman).Methods("POST")
 	router.HandleFunc("/pengumuman/{id}", pengumumanHandler.UpdatePengumuman).Methods("PUT")
+	router.HandleFunc("/pengumuman/{id}", pengumumanHandler.DeletePengumuman).Methods("DELETE")
+	router.HandleFunc("/pengumuman", pengumumanHandler.GetAllPengumuman).Methods("GET")
+	router.HandleFunc("/pengumuman/{id}", pengumumanHandler.GetPengumumanByID).Methods("GET")
 
 	// Start the HTTP server
 	log.Println("Pengumuman service is running on http://localhost:8084")

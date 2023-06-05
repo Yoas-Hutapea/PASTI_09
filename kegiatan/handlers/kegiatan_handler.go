@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"github.com/gorilla/mux"
 
 	"github.com/Yoas-Hutapea/Microservice_09/kegiatan/models"
 	"github.com/Yoas-Hutapea/Microservice_09/kegiatan/services"
@@ -66,8 +67,9 @@ func (kh *KegiatanHandler) UpdateKegiatan(w http.ResponseWriter, r *http.Request
 
 func (kh *KegiatanHandler) DeleteKegiatan(w http.ResponseWriter, r *http.Request) {
 	// Parse the request parameters
-	// Assuming the kegiatan ID is passed as a query parameter named "id"
-	kegiatanID := r.URL.Query().Get("id")
+	// Assuming the kegiatan ID is passed as a path variable named "id"
+	vars := mux.Vars(r)
+	kegiatanID := vars["id"]
 	if kegiatanID == "" {
 		http.Error(w, "Kegiatan ID is required", http.StatusBadRequest)
 		return
@@ -90,4 +92,47 @@ func (kh *KegiatanHandler) DeleteKegiatan(w http.ResponseWriter, r *http.Request
 	// Return success response
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "Kegiatan deleted successfully")
+}
+
+func (kh *KegiatanHandler) GetKegiatanByID(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	kegiatanID, err := strconv.Atoi(params["id"])
+	if err != nil {
+		http.Error(w, "Invalid kegiatan ID", http.StatusBadRequest)
+		return
+	}
+
+	kegiatan, err := kh.KegiatanService.KegiatanRepository.GetKegiatanByID(kegiatanID)
+	if err != nil {
+		http.Error(w, "Error retrieving kegiatan", http.StatusInternalServerError)
+		return
+	}
+
+	jsonResponse, err := json.Marshal(kegiatan)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonResponse)
+}
+
+func (kh *KegiatanHandler) GetAllKegiatan(w http.ResponseWriter, r *http.Request) {
+	kegiatans, err := kh.KegiatanService.KegiatanRepository.GetAllKegiatan()
+	if err != nil {
+		http.Error(w, "Error retrieving kegiatans", http.StatusInternalServerError)
+		return
+	}
+
+	jsonResponse, err := json.Marshal(kegiatans)
+	if err != nil {
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonResponse)
 }

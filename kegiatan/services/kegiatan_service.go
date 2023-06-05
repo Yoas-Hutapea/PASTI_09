@@ -50,3 +50,11 @@ func (ks *KegiatanService) DeleteKegiatan(kegiatanID int) error {
 
 	return nil
 }
+
+func (ks *KegiatanService) GetKegiatanByID(kegiatanID int) (*models.Kegiatan, error) {
+	return ks.KegiatanRepository.GetKegiatanByID(kegiatanID)
+}
+
+func (ks *KegiatanService) GetAllKegiatan() ([]*models.Kegiatan, error) {
+	return ks.KegiatanRepository.GetAllKegiatan()
+}

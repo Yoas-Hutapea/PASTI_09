@@ -15,11 +15,11 @@ func NewPengumumanService(pengumumanRepository *repositories.PengumumanRepositor
 	}
 }
 
-func (ps *PengumumanService) AddPengumuman(perangkat *models.Pengumuman) error {
-	// Implement the logic to add a perangkat desa to the database
+func (ps *PengumumanService) AddPengumuman(pengumuman *models.Pengumuman) error {
+	// Implement the logic to add a pengumuman desa to the database
 	// Use PengumumanRepository to execute SQL queries
 	// Return an error if the operation fails
-	err := ps.PengumumanRepository.AddPengumuman(perangkat)
+	err := ps.PengumumanRepository.AddPengumuman(pengumuman)
 	if err != nil {
 		return err
 	}
@@ -27,11 +27,11 @@ func (ps *PengumumanService) AddPengumuman(perangkat *models.Pengumuman) error {
 	return nil
 }
 
-func (ps *PengumumanService) UpdatePengumuman(perangkat *models.Pengumuman) error {
-	// Implement the logic to update a perangkat desa in the database
+func (ps *PengumumanService) UpdatePengumuman(pengumuman *models.Pengumuman) error {
+	// Implement the logic to update a pengumuman desa in the database
 	// Use PengumumanRepository to execute SQL queries
 	// Return an error if the operation fails
-	err := ps.PengumumanRepository.UpdatePengumuman(perangkat)
+	err := ps.PengumumanRepository.UpdatePengumuman(pengumuman)
 	if err != nil {
 		return err
 	}
@@ -40,7 +40,7 @@ func (ps *PengumumanService) UpdatePengumuman(perangkat *models.Pengumuman) erro
 }
 
 func (ps *PengumumanService) DeletePengumuman(perangkatID int) error {
-	// Implement the logic to delete a perangkat desa from the database
+	// Implement the logic to delete a pengumuman desa from the database
 	// Use PengumumanRepository to execute SQL queries
 	// Return an error if the operation fails
 	err := ps.PengumumanRepository.DeletePengumuman(perangkatID)
@@ -49,4 +49,12 @@ func (ps *PengumumanService) DeletePengumuman(perangkatID int) error {
 	}
 
 	return nil
+}
+
+func (ps *PengumumanService) GetPengumumanByID(kegiatanID int) (*models.Pengumuman, error) {
+	return ps.PengumumanRepository.GetPengumumanByID(kegiatanID)
+}
+
+func (ps *PengumumanService) GetAllPengumuman() ([]*models.Pengumuman, error) {
+	return ps.PengumumanRepository.GetAllPengumuman()
 }

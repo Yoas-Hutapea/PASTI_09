@@ -35,6 +35,9 @@ func main() {
 	// Register the routes
 	router.HandleFunc("/kegiatan", kegiatanHandler.AddKegiatan).Methods("POST")
 	router.HandleFunc("/kegiatan/{id}", kegiatanHandler.UpdateKegiatan).Methods("PUT")
+	router.HandleFunc("/kegiatan/{id}", kegiatanHandler.DeleteKegiatan).Methods("DELETE")
+	router.HandleFunc("/kegiatan", kegiatanHandler.GetAllKegiatan).Methods("GET")
+	router.HandleFunc("/kegiatan/{id}", kegiatanHandler.GetKegiatanByID).Methods("GET")
 
 	// Start the HTTP server
 	log.Println("Kegiatan service is running on http://localhost:8083")
