@@ -68,7 +68,8 @@ func (ph *PengumumanHandler) UpdatePengumuman(w http.ResponseWriter, r *http.Req
 func (ph *PengumumanHandler) DeletePengumuman(w http.ResponseWriter, r *http.Request) {
 	// Parse the request parameters
 	// Assuming the pengumuman ID is passed as a query parameter named "id"
-	pengumumanID := r.URL.Query().Get("id")
+	params := mux.Vars(r)
+	pengumumanID := params["id"]
 	if pengumumanID == "" {
 		http.Error(w, "Pengumuman ID is required", http.StatusBadRequest)
 		return
@@ -92,6 +93,7 @@ func (ph *PengumumanHandler) DeletePengumuman(w http.ResponseWriter, r *http.Req
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "Pengumuman deleted successfully")
 }
+
 
 func (ph *PengumumanHandler) GetPengumumanByID(w http.ResponseWriter, r *http.Request) {
 	// Parse the request parameters

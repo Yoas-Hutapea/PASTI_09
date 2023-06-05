@@ -51,8 +51,8 @@ func (ps *PerangkatDesaService) DeletePerangkatDesa(perangkatID int) error {
 	return nil
 }
 
-func (ps *PerangkatDesaService) GetPerangkatDesaByID(kegiatanID int) (*models.PerangkatDesa, error) {
-	return ps.PerangkatDesaRepository.GetPerangkatDesaByID(kegiatanID)
+func (ps *PerangkatDesaService) GetPerangkatDesaByID(perangkatID int) (*models.PerangkatDesa, error) {
+	return ps.PerangkatDesaRepository.GetPerangkatDesaByID(perangkatID)
 }
 
 func (ps *PerangkatDesaService) GetAllPerangkatDesa() ([]*models.PerangkatDesa, error) {

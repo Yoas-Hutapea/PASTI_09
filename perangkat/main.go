@@ -35,6 +35,10 @@ func main() {
 	// Register the routes
 	router.HandleFunc("/perangkat", perangkatHandler.AddPerangkat).Methods("POST")
 	router.HandleFunc("/perangkat/{id}", perangkatHandler.UpdatePerangkatDesa).Methods("PUT")
+	router.HandleFunc("/perangkat/{id}", perangkatHandler.DeletePerangkatDesa).Methods("DELETE")
+	router.HandleFunc("/perangkat", perangkatHandler.GetAllPerangkatDesa).Methods("GET")
+	router.HandleFunc("/perangkat/{id}", perangkatHandler.GetPerangkatDesaByID).Methods("GET")
+
 
 	// Start the HTTP server
 	log.Println("Perangkat service is running on http://localhost:8085")
